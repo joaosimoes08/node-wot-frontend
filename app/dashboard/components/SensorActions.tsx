@@ -18,7 +18,7 @@ export function SensorActions() {
     const sensorId = selectedSensor.replace("wot:dev:", "");
 
     try {
-      const res = await fetch(`https://api.buffetanalyzer.systems/api/wot/getCurrentData`, {
+      const res = await fetch(`/api/proxy?path=/api/wot/getCurrentData`, {
         method: 'GET',
       });
 
@@ -40,7 +40,7 @@ export function SensorActions() {
 
       try {
 
-        const res = await fetch(`https://api.buffetanalyzer.systems/api/wot/closeBuffet`, {
+        const res = await fetch(`/api/proxy?path=/api/wot/closeBuffet`, {
           method: 'POST',
         })
 
@@ -56,7 +56,7 @@ export function SensorActions() {
 
       try {
 
-        const res = await fetch(`https://api.buffetanalyzer.systems/api/wot/openBuffet`, {
+        const res = await fetch(`/api/proxy?path=/api/wot/openBuffet`, {
           method: 'POST',
         })
 
