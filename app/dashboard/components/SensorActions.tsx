@@ -7,44 +7,128 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export function SensorActions() {
   const [page, setPage] = useState(0);
+  const [selectedSensor, setSelectedSensor] = useState('');
+
+  const handleCurrentData = async () => {
+    if (!selectedSensor) {
+      console.error("Nenhum sensor selecionado!");
+      return;
+    }
+
+    const sensorId = selectedSensor.replace("wot:dev:", "");
+
+    try {
+      const res = await fetch(`http://192.168.137.248:8080/${sensorId}/properties/currentSensorData`, {
+        method: 'GET',
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error(`Erro ${res.status}: ${text}`);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Dados recebidos:", data);
+    } catch (e) {
+      console.error("Falhei:", e.message || e);
+    }
+  };
+
+
+  const handleCloseBuffet = async () => {
+
+      try {
+
+        const res = await fetch(`http://192.168.137.248:8080/buffet-food-quality-analyzer-01/actions/closeBuffet`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!res.ok) throw new Error()
+
+        console.log(`Comando 'closeBuffet' enviado com sucesso!`)
+      } catch (e) {
+        console.error("Falhei")
+      }
+  }
+
+    const handleOpenBuffet = async () => {
+
+      try {
+
+        const res = await fetch(`http://192.168.137.248:8080/buffet-food-quality-analyzer-01/actions/openBuffet`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!res.ok) throw new Error()
+
+        console.log(`Comando 'openBuffet' enviado com sucesso!`)
+      } catch (e) {
+        console.error("Falhei")
+      }
+  }
 
   const actions = [
     {
-      label: 'Ligar Motor',
+      label: 'Receber Dados Recentes',
       content: (
         <div className="flex flex-col items-center justify-center gap-4">
-          <Select>
+          <Select value={selectedSensor} onValueChange={setSelectedSensor}>
             <SelectTrigger className="w-[220px]">
               <SelectValue placeholder="Selecionar sensor" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="esp32-a">ESP32-A</SelectItem>
-              <SelectItem value="esp32-b">ESP32-B</SelectItem>
-              <SelectItem value="esp32-c">ESP32-C</SelectItem>
+              <SelectItem value="wot:dev:buffet-food-quality-analyzer-01">wot:dev:buffet-food-quality-analyzer-01</SelectItem>
             </SelectContent>
           </Select>
 
           <div className="flex justify-center gap-2">
-            <Button variant="default">Ligar</Button>
-            <Button variant="secondary">Desligar</Button>
-            <Button variant="destructive">Reiniciar</Button>
+            <Button variant="default" onClick={handleCurrentData}>Pedir</Button>
           </div>
         </div>
       ),
     },
     {
-      label: 'Comando Direto',
+      label: 'Fechar Buffet',
       content: (
-        <div className="text-sm text-muted-foreground text-center">
-          Em breve: interface para envio direto de comandos.
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Select value={selectedSensor} onValueChange={setSelectedSensor}>
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Selecionar sensor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="wot:dev:buffet-food-quality-analyzer-01">wot:dev:buffet-food-quality-analyzer-01</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="flex justify-center gap-2">
+            <Button variant="default" onClick={handleCloseBuffet}>Fechar</Button>
+          </div>
         </div>
       ),
     },
     {
-      label: 'Ver Estado',
+      label: 'Abrir Buffet',
       content: (
-        <div className="text-sm text-muted-foreground text-center">
-          Em breve: ver estado atual de cada sensor.
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Select value={selectedSensor} onValueChange={setSelectedSensor}>
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Selecionar sensor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="wot:dev:buffet-food-quality-analyzer-01">wot:dev:buffet-food-quality-analyzer-01</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="flex justify-center gap-2">
+            <Button variant="default" onClick={handleOpenBuffet}>Abrir</Button>
+          </div>
         </div>
       ),
     },
