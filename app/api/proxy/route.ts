@@ -14,6 +14,11 @@ export async function GET(req: NextRequest) {
     return new NextResponse('Parâmetro "path" em falta.', { status: 400 });
   }
 
+  if (!path || path.includes('undefined')) {
+    console.warn(`⚠️ Proxy bloqueou path inválido: ${path}`)
+    return new NextResponse( 'Invalid path', { status: 400 });
+  }
+
   try {
     const res = await fetch(`${BACK_API_URL}${path}`, {
       headers: {

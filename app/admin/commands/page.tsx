@@ -49,7 +49,13 @@ export default function CommandsPage() {
       desc: 'Calibra os sensores do dispositivo.',
       value: 'calibrateSensors',
       endpoint: ''
-    }
+    },
+    {
+      label: 'Abrir Buffet',
+      desc: 'Abre imediatamente o buffet.',
+      value: 'openBuffet',
+      endpoint: ''
+    },
   ])
   const [selectedControllers, setSelectedControllers] = useState<{ [key: number]: string }>({})
 
@@ -113,10 +119,12 @@ export default function CommandsPage() {
 
     try {
       const encodedPath = encodeURIComponent(
-        command.endpoint.replace(/^https?:\/\/[^/]+/, '')
+        command.endpoint.replace(/^http?:\/\/[^/]+/, '')
       )
 
-      const res = await fetch(`/api/proxy?path=${encodedPath}`, {
+      console.log(encodedPath)
+
+      const res = await fetch(`${command.endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
