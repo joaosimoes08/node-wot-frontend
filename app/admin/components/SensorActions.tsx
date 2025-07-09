@@ -18,7 +18,7 @@ export function SensorActions() {
     const sensorId = selectedSensor.replace("wot:dev:", "");
 
     try {
-      const res = await fetch(`http://192.168.137.248:8080/${sensorId}/properties/currentSensorData`, {
+      const res = await fetch(`http://10.147.18.50:8080/${sensorId}/properties/currentSensorData`, {
         method: 'GET',
       });
 
@@ -40,7 +40,7 @@ export function SensorActions() {
 
       try {
 
-        const res = await fetch(`http://192.168.137.248:8080/buffet-food-quality-analyzer-01/actions/closeBuffet`, {
+        const res = await fetch(`http://10.147.18.50:8080/buffet-food-quality-analyzer-01/actions/closeBuffet`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ export function SensorActions() {
 
       try {
 
-        const res = await fetch(`http://192.168.137.248:8080/buffet-food-quality-analyzer-01/actions/openBuffet`, {
+        const res = await fetch(`http://10.147.18.50:8080/buffet-food-quality-analyzer-01/actions/openBuffet`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
