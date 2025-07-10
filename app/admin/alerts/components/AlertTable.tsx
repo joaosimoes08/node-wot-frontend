@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react"
 
+
+
 export function AlertTable() {
   const [alerts, setAlerts] = useState<any[]>([])
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchAlerts = async () => {
       try {
         const res = await fetch(`/api/proxy?path=/api/alerts`)

@@ -9,6 +9,10 @@ import {
 } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { Toaster } from 'sonner'
+import SSEWrapper from "./components/SSEWrapper";
+
+
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,6 +40,8 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <header className="flex justify-end items-center gap-4">
           </header>
+          <Toaster richColors expand={true} />
+          <SSEWrapper />
           {children}
         </body>
       </html>
