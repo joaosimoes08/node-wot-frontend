@@ -100,7 +100,10 @@ export default function CommandsPage() {
   const handleExecute = async (index: number, command: Command) => {
     const selected = selectedControllers[index]
 
-    const updatedUrl = command.endpoint.replace("192.168.137.248", "10.147.18.209");
+    const url = new URL(command.endpoint);
+    const parts = url.pathname.split("/");
+    const action = parts[parts.length - 1];
+
     if (!selected) {
       toast.error('Seleciona um controlador primeiro.')
       return
@@ -121,7 +124,7 @@ export default function CommandsPage() {
         command.endpoint.replace(/^http?:\/\/[^/]+/, '')
       )
 
-      const res = await fetch(`${updatedUrl}`, {
+      const res = await fetch(`/api/proxy?path=/api/wot/${action}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
