@@ -73,6 +73,14 @@ export function SensorHistoryChart({
     TVOC: 'tvoc',
   }
 
+  const measureUnits: Record<string, string> = {
+    temperature: '°C',
+    humidity: '%RH',
+    co2: 'PPM',
+    tvoc: 'PPB',
+  }
+
+
   const renderArea = (key: string, color: string) => (
     <Area key={key} type="monotone" dataKey={key} stroke={color} fill={color} fillOpacity={0.2} />
   )
@@ -93,6 +101,26 @@ export function SensorHistoryChart({
     )
   }
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 rounded shadow text-xs border">
+          <p className="font-semibold">{label}</p>
+          {payload.map((entry: any, index: number) => {
+            const unit = measureUnits[entry.dataKey] || ''
+            return (
+              <p key={index} style={{ color: entry.color }}>
+                {entry.name}: {entry.value} {unit}
+              </p>
+            )
+          })}
+        </div>
+      )
+    }
+    return null
+  }
+
+
   return (
     <Card className="w-full h-[280px]">
       <CardHeader>
@@ -101,9 +129,27 @@ export function SensorHistoryChart({
       <CardContent className="h-[180px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
-            <XAxis dataKey="time" />
-            <YAxis />
-            <Tooltip />
+            <XAxis dataKey="time" tick={{ fontSize: 8 }}/>
+            <YAxis
+              tick={{ fontSize: 8 }}
+              tickFormatter={(value) => {
+                if (selectedMeasure !== 'Todas') {
+                  const key = measureKeys[selectedMeasure as keyof typeof measureKeys]
+                  return `${value} ${measureUnits[key]}`
+                }
+
+                // Quando for "Todas", escolher a métrica com maior valor
+                const lastEntry = data[data.length - 1]
+                if (!lastEntry) return value
+
+                const dominant = ['co2', 'temperature', 'humidity', 'tvoc'].reduce((a, b) =>
+                  (lastEntry[a] || 0) > (lastEntry[b] || 0) ? a : b
+                )
+
+                return `${value} ${measureUnits[dominant]}`
+              }}
+            />
+            <Tooltip content={<CustomTooltip />}/>
             {renderAreas()}
           </AreaChart>
         </ResponsiveContainer>
